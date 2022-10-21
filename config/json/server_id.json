@@ -1,0 +1,26 @@
+{
+  "artists": [
+    {
+      "id": "726tAAHoBnNpFvjHLZHsN4",
+      "releases": {
+        "albums": [
+          {"1": "name1"}, {"2": "name2"}, {"3": "name3"}
+        ],
+        "singles": [
+          {"1": "name1"}, {"2": "name2"}, {"3": "name3"}
+        ]
+      }
+    },
+    {
+      "id": "1oxn6cQ37twQ7yGnlE3ETd",
+      "releases": {
+        "albums": [
+          {"1": "name1"}, {"2": "name2"}, {"3": "name3"}
+        ],
+        "singles": [
+          {"1": "name1"}, {"2": "name2"}, {"3": "name3"}
+        ]
+      }
+    }
+  ]
+}

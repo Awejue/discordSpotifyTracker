@@ -10,22 +10,10 @@ import org.javacord.api.interaction.SlashCommandInteraction;
 public class Main {
     public static void main(String[] args) {
         String token = "MTAxNzQ3MjYwNTE0MzQ0NTU5NA.GeGwIH.anCO13nArAe-SBhOuW__xpPNAuR7YqyS8id404";
+        String spotifyClientID = "5893ed7df50f4010a6d7f06ba0465bdb";
+        String spotifySecretID = "daab854d59fa4a888a8b43a873c41a83";
 
         DiscordApi api = new DiscordApiBuilder().setToken(token).login().join();
 
-        String regex = "<@"+api.getClientId() + ">";
-
-        SlashCommand command = SlashCommand.with("test", "TEst command").createGlobal(api).join();
-
-        api.addSlashCommandCreateListener( event -> {
-            SlashCommandInteraction interaction = event.getSlashCommandInteraction();
-            if (interaction.getCommandName().equals("test")) {
-                interaction.createImmediateResponder().setContent("kox").addComponents(
-                        ActionRow.of(
-                                Button.primary("feed", "Nakarm")
-                        )
-                ).respond();
-            }
-        });
     }
 }
