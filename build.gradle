@@ -20,7 +20,6 @@ repositories {
 dependencies {
     implementation 'org.javacord:javacord:3.6.0'
     implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.2.2'
-    implementation 'org.json:json:20220924'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
 }
 

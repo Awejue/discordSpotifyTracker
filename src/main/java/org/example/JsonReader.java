@@ -1,23 +1,44 @@
 package org.example;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonReader {
-    private static JSONObject obj = new JSONObject("../../../config/json/server_id.json");
-    private static final JSONArray JSONartists = obj.getJSONArray("artists");
 
-    public static ArtistTemplate getJSONArtist(int id) {
-        JSONObject artist = JSONartists.getJSONObject(id);
-        return new ArtistTemplate(artist.getString("id"), artist.getJSONObject("releases").getJSONArray("albums"), artist.getJSONObject("releases").getJSONArray("singles"));
+    private static final ObjectMapper mapper = new ObjectMapper();
+    private static List<ArtistTemplate> map;
+
+    private static File json = new File("config/json/server_id.json");
+
+    static {
+        try {
+            if (!json.createNewFile() && !(json.length()==0 || json.length()==2)){
+                map = mapper.readValue(json, new TypeReference<List<ArtistTemplate>>() {});
+            }
+            else map = new ArrayList<>();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public static ArtistTemplate[] getJSONArtists() {
-        ArtistTemplate[] artists = new ArtistTemplate[JSONartists.length()];
-        for (int i = 0;i<JSONartists.length();i++) {
-            JSONObject artist = JSONartists.getJSONObject(i);
-            artists[i] = new ArtistTemplate(artist.getString("id"), artist.getJSONArray("albums"), artist.getJSONArray("singles"));
+    public static ArtistTemplate getJSONArtist(int id) {
+        return map.get(id);
+    }
+
+    public static List<ArtistTemplate> getJSONArtists() {
+        return map;
+    }
+
+    public static void save(List<ArtistTemplate> artists) {
+        try {
+            mapper.writeValue(new File("config/json/server_id.json"), artists);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return artists;
     }
 }
