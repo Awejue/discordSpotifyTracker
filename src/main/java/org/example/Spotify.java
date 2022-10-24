@@ -1,5 +1,6 @@
 package org.example;
 
+import org.javacord.api.entity.message.component.SelectMenuOption;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
@@ -9,6 +10,8 @@ import se.michaelthelin.spotify.requests.authorization.client_credentials.Client
 import se.michaelthelin.spotify.requests.data.artists.GetArtistRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistsAlbumsRequest;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,9 +40,7 @@ public class Spotify {
             try {
                 List<AlbumSimplified> changes = new ArrayList<>();
 
-                final CompletableFuture<ClientCredentials> clientCredentialsFuture = clientCredentialsRequest.executeAsync();
-                final ClientCredentials clientCredentials = clientCredentialsFuture.join();
-                spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+                setAccessToken();
 
                 for (ArtistTemplate artist : artists) {
                     final GetArtistsAlbumsRequest artistsAlbumsRequest = spotifyApi.getArtistsAlbums(artist.getId()).limit(3).album_type("album").build();
@@ -82,9 +83,7 @@ public class Spotify {
     public static String addArtist(String spotifyLink) {
         initialize();
         try {
-            final CompletableFuture<ClientCredentials> clientCredentialsFuture = clientCredentialsRequest.executeAsync();
-            final ClientCredentials clientCredentials = clientCredentialsFuture.join();
-            spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+            setAccessToken();
 
             String id = getIdFromUrl(spotifyLink);
 
@@ -100,9 +99,7 @@ public class Spotify {
             final CompletableFuture<Paging<AlbumSimplified>> singlesFuture = artistsSinglesRequest.executeAsync();
             final AlbumSimplified[] singles = singlesFuture.join().getItems();
 
-            final GetArtistRequest artistRequest = spotifyApi.getArtist(id).build();
-            final Artist artist = artistRequest.executeAsync().join();
-
+            final Artist artist = getArtist(id);
 
             ArrayList<String> albumsIds = new ArrayList<>();
             ArrayList<String> singlesIds = new ArrayList<>();
@@ -126,16 +123,36 @@ public class Spotify {
         }
     }
 
+
+    public static Artist getArtistFromJson(int id) {
+        initialize();
+        setAccessToken();
+        final GetArtistRequest artistRequest = spotifyApi.getArtist(artists.get(id).getId()).build();
+        return artistRequest.executeAsync().join();
+    }
+
+    public static Artist getArtist(String id) {
+        final GetArtistRequest artistRequest = spotifyApi.getArtist(id).build();
+        return artistRequest.executeAsync().join();
+    }
+
     public static String removeArtist(String name) {
         initialize();
-        if (artists.stream().anyMatch(o -> {
-            if (name.equals(o.getName()) || name.equals(o.getId())) artists.remove(o);
-            return true;
-        })) {
-            JsonReader.save(artists);
-            return "Artist removed";
+        String finalName = getIdFromUrl(name);
+        if (!finalName.equals("Wrong link")) {
+            if (artists.removeIf(artistTemplate -> (finalName.equals(artistTemplate.getName()) || finalName.equals(artistTemplate.getId())))) {
+                JsonReader.save(artists);
+                return "Artist deleted";
+            }
+            else return "None removed";
         }
-        else return "None removed";
+        else {
+            if (artists.removeIf(artistTemplate -> (name.equals(artistTemplate.getName()) || name.equals(artistTemplate.getId())))) {
+                JsonReader.save(artists);
+                return "Artist deleted";
+            }
+            else return "None removed";
+        }
     }
 
     private static String getIdFromUrl(String spotifyLink) {
@@ -155,5 +172,21 @@ public class Spotify {
 
     private static void initialize() {
         artists = JsonReader.getJSONArtists();
+    }
+
+    private static void setAccessToken() {
+        final CompletableFuture<ClientCredentials> clientCredentialsFuture = clientCredentialsRequest.executeAsync();
+        final ClientCredentials clientCredentials = clientCredentialsFuture.join();
+        spotifyApi.setAccessToken(clientCredentials.getAccessToken());
+    }
+
+    public static List<SelectMenuOption> createArtistMenu() {
+        initialize();
+        List<SelectMenuOption> artistMenu = new ArrayList<>();
+        for (ArtistTemplate artist:
+             artists) {
+            artistMenu.add(SelectMenuOption.create(artist.getName(),artist.getName(), "Show "+artist.getName()));
+        }
+        return artistMenu;
     }
 }
