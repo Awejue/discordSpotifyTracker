@@ -1,17 +1,19 @@
 package org.example;
 
 import org.javacord.api.entity.message.component.SelectMenuOption;
+import org.javacord.api.entity.message.embed.Embed;
+import org.javacord.api.entity.message.embed.EmbedBuilder;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
+import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
+import se.michaelthelin.spotify.requests.data.albums.GetAlbumRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistsAlbumsRequest;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,8 +36,8 @@ public class Spotify {
 
     private static List<ArtistTemplate> artists;
 
-    public static List<AlbumSimplified> checkArtists_Async() {
-        initialize();
+    public static List<AlbumSimplified> checkArtists_Async(String serverId) {
+        initialize(serverId);
         if (!artists.isEmpty()) {
             try {
                 List<AlbumSimplified> changes = new ArrayList<>();
@@ -51,6 +53,7 @@ public class Spotify {
                     final CompletableFuture<Paging<AlbumSimplified>> singlesFuture = artistsSinglesRequest.executeAsync();
                     final AlbumSimplified[] singles = singlesFuture.join().getItems();
 
+                    changes.add(singles[0]);
                     for (int i = 0; i < albums.length; i++) {
                         if (albums[i].getId().equals(artist.getAlbums().get(i))) {
                         } else {
@@ -67,7 +70,6 @@ public class Spotify {
                         }
                     }
                 }
-                JsonReader.save(artists);
                 return changes;
             } catch (CompletionException e) {
                 System.out.println("Error: " + e.getCause().getMessage());
@@ -80,8 +82,8 @@ public class Spotify {
         return null;
     }
 
-    public static String addArtist(String spotifyLink) {
-        initialize();
+    public static String addArtist(String serverId, String spotifyLink) {
+        initialize(serverId);
         try {
             setAccessToken();
 
@@ -113,9 +115,9 @@ public class Spotify {
 
             artists.add(new ArtistTemplate(id, artist.getName(), albumsIds, singlesIds));
 
-            JsonReader.save(artists);
+            JsonReader.save(serverId, artists);
 
-            return "Added";
+            return "Added " + artist.getName();
         } catch (CompletionException e) {
             return ("Error: " + e.getCause().getMessage());
         } catch (CancellationException e) {
@@ -124,31 +126,41 @@ public class Spotify {
     }
 
 
-    public static Artist getArtistFromJson(int id) {
-        initialize();
+    public static Artist getArtistFromJson(String serverId, int id) {
+        initialize(serverId);
         setAccessToken();
-        final GetArtistRequest artistRequest = spotifyApi.getArtist(artists.get(id).getId()).build();
-        return artistRequest.executeAsync().join();
+        if (id<artists.size() && id>=0) {
+            final GetArtistRequest artistRequest = spotifyApi.getArtist(artists.get(id).getId()).build();
+            return artistRequest.executeAsync().join();
+        }
+        else return null;
+    }
+
+    public static Album getAlbum(String id) {
+        setAccessToken();
+        final GetAlbumRequest albumRequest = spotifyApi.getAlbum(id).build();
+        return albumRequest.executeAsync().join();
     }
 
     public static Artist getArtist(String id) {
+        setAccessToken();
         final GetArtistRequest artistRequest = spotifyApi.getArtist(id).build();
         return artistRequest.executeAsync().join();
     }
 
-    public static String removeArtist(String name) {
-        initialize();
+    public static String removeArtist(String serverId, String name) {
+        initialize(serverId);
         String finalName = getIdFromUrl(name);
         if (!finalName.equals("Wrong link")) {
-            if (artists.removeIf(artistTemplate -> (finalName.equals(artistTemplate.getName()) || finalName.equals(artistTemplate.getId())))) {
-                JsonReader.save(artists);
+            if (artists.removeIf(artistTemplate -> (finalName.equalsIgnoreCase(artistTemplate.getName()) || finalName.equals(artistTemplate.getId())))) {
+                JsonReader.save(serverId, artists);
                 return "Artist deleted";
             }
             else return "None removed";
         }
         else {
-            if (artists.removeIf(artistTemplate -> (name.equals(artistTemplate.getName()) || name.equals(artistTemplate.getId())))) {
-                JsonReader.save(artists);
+            if (artists.removeIf(artistTemplate -> (name.equalsIgnoreCase(artistTemplate.getName()) || name.equals(artistTemplate.getId())))) {
+                JsonReader.save(serverId, artists);
                 return "Artist deleted";
             }
             else return "None removed";
@@ -170,8 +182,8 @@ public class Spotify {
         return "Wrong link";
     }
 
-    private static void initialize() {
-        artists = JsonReader.getJSONArtists();
+    private static void initialize(String serverId) {
+        artists = JsonReader.getJSONArtists(serverId);
     }
 
     private static void setAccessToken() {
@@ -180,13 +192,13 @@ public class Spotify {
         spotifyApi.setAccessToken(clientCredentials.getAccessToken());
     }
 
-    public static List<SelectMenuOption> createArtistMenu() {
-        initialize();
-        List<SelectMenuOption> artistMenu = new ArrayList<>();
-        for (ArtistTemplate artist:
-             artists) {
-            artistMenu.add(SelectMenuOption.create(artist.getName(),artist.getName(), "Show "+artist.getName()));
+    public static EmbedBuilder createArtistsEmbed(String serverId) {
+        initialize(serverId);
+        EmbedBuilder embed = new EmbedBuilder();
+        for (ArtistTemplate artist: artists) {
+            embed.addField(artist.getName(), artist.getName(), true);
         }
-        return artistMenu;
+        return embed;
     }
+
 }

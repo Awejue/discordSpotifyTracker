@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="aa5e75cf-feba-403e-b943-97ae3ccd904f" name="Changes" comment="Add JSONReader.java&#10;Add json file&#10;Add ArtistTemplate.java&#10;JSONObject creating weird error">
+      <change afterPath="$PROJECT_DIR$/config/json/server_idChannel.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/json/server_id.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/json/server_id.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/JsonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/JsonReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/Spotify.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/Spotify.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,14 +41,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "E:/Intellicad/smokinightwood",
-    "settings.editor.selected.configurable": "settings.json.schema"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/operator/IdeaProjects/smokinightwood&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.json.schema&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\operator\IdeaProjects\smokinightwood" />
@@ -129,14 +132,7 @@
       <option name="project" value="LOCAL" />
       <updated>1666348897129</updated>
     </task>
-    <task id="LOCAL-00007" summary="Add JSONReader.java&#10;Add json file&#10;Add ArtistTemplate.java&#10;JSONObject creating weird error">
-      <created>1666635400160</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1666635400160</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
