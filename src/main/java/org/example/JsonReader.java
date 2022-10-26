@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings({"ResultOfMethodCallIgnored", "Convert2Diamond"})
 public class JsonReader {
 
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static List<ArtistTemplate> map;
 
     private static File json;
 
@@ -37,6 +37,7 @@ public class JsonReader {
     }
 
     public static List<ArtistTemplate> getJSONArtists(String serverId) {
+        List<ArtistTemplate> map;
         try {
             setJson(serverId);
             if (!(json.length()==0 || json.length()==2)){

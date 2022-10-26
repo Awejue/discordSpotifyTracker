@@ -1,16 +1,12 @@
 package org.example;
 
-import org.javacord.api.entity.message.component.SelectMenuOption;
-import org.javacord.api.entity.message.embed.Embed;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import se.michaelthelin.spotify.SpotifyApi;
 import se.michaelthelin.spotify.model_objects.credentials.ClientCredentials;
-import se.michaelthelin.spotify.model_objects.specification.Album;
 import se.michaelthelin.spotify.model_objects.specification.AlbumSimplified;
 import se.michaelthelin.spotify.model_objects.specification.Artist;
 import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
-import se.michaelthelin.spotify.requests.data.albums.GetAlbumRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistsAlbumsRequest;
 
@@ -39,8 +35,8 @@ public class Spotify {
     public static List<AlbumSimplified> checkArtists_Async(String serverId) {
         initialize(serverId);
         if (!artists.isEmpty()) {
+            List<AlbumSimplified> changes = new ArrayList<>();
             try {
-                List<AlbumSimplified> changes = new ArrayList<>();
 
                 setAccessToken();
 
@@ -53,18 +49,15 @@ public class Spotify {
                     final CompletableFuture<Paging<AlbumSimplified>> singlesFuture = artistsSinglesRequest.executeAsync();
                     final AlbumSimplified[] singles = singlesFuture.join().getItems();
 
-                    changes.add(singles[0]);
                     for (int i = 0; i < albums.length; i++) {
-                        if (albums[i].getId().equals(artist.getAlbums().get(i))) {
-                        } else {
+                        if (!albums[i].getId().equals(artist.getAlbums().get(i))) {
                             changes.add(albums[i]);
                             artist.addAlbumId(albums[i].getId());
                         }
                     }
 
                     for (int i = 0; i < singles.length; i++) {
-                        if (singles[i].getId().equals(artist.getSingles().get(i))) {
-                        } else {
+                        if (!singles[i].getId().equals(artist.getSingles().get(i))) {
                             changes.add(singles[i]);
                             artist.addSingleId(singles[i].getId());
                         }
@@ -72,14 +65,12 @@ public class Spotify {
                 }
                 return changes;
             } catch (CompletionException e) {
-                System.out.println("Error: " + e.getCause().getMessage());
-                return null;
+                return new ArrayList<>();
             } catch (CancellationException e) {
                 System.out.println("Async operation cancelled.");
-                return null;
+                return new ArrayList<>();
             }
-        }
-        return null;
+        } else return new ArrayList<>();
     }
 
     public static String addArtist(String serverId, String spotifyLink) {
@@ -106,11 +97,11 @@ public class Spotify {
             ArrayList<String> albumsIds = new ArrayList<>();
             ArrayList<String> singlesIds = new ArrayList<>();
 
-            for (int i = 0;i<albums.length;i++){
-                albumsIds.add(albums[i].getId());
+            for (AlbumSimplified album : albums) {
+                albumsIds.add(album.getId());
             }
-            for (int i = 0;i<singles.length;i++) {
-                singlesIds.add(singles[i].getId());
+            for (AlbumSimplified single : singles) {
+                singlesIds.add(single.getId());
             }
 
             artists.add(new ArtistTemplate(id, artist.getName(), albumsIds, singlesIds));
@@ -136,11 +127,6 @@ public class Spotify {
         else return null;
     }
 
-    public static Album getAlbum(String id) {
-        setAccessToken();
-        final GetAlbumRequest albumRequest = spotifyApi.getAlbum(id).build();
-        return albumRequest.executeAsync().join();
-    }
 
     public static Artist getArtist(String id) {
         setAccessToken();
@@ -171,7 +157,7 @@ public class Spotify {
         Pattern pattern = Pattern.compile("https://open\\.spotify\\.com/artist/[a-zA-Z0-9]{22}");
 
         if (pattern.matcher(spotifyLink).find()) {
-            URL url = null;
+            URL url;
             try {
                 url = new URL(spotifyLink);
             } catch (MalformedURLException e) {

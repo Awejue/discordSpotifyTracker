@@ -2,15 +2,15 @@ package org.example;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
+@SuppressWarnings({"unused", "ConstantConditions"})
 public class ArtistTemplate {
-    private String id;
+    final private String id;
 
-    private String name;
+    final private String name;
 
-    private ArrayList<String> albums;
-    private ArrayList<String> singles;
+    final private ArrayList<String> albums;
+    final private ArrayList<String> singles;
 
 
     public ArtistTemplate() {
