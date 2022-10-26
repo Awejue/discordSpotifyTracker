@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"OptionalGetWithoutIsPresent", "unused", "ConstantConditions"})
 public class Main {
@@ -61,7 +62,7 @@ public class Main {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                for (Server server:api.getServers().stream().toList()) {
+                for (Server server:api.getServers().stream().collect(Collectors.toList())) {
                     String serverId = String.valueOf(server.getId());
                     String textChannelId = JsonReader.getChannelId(serverId);
                     List<AlbumSimplified> changes = Spotify.checkArtists_Async(serverId);

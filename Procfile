@@ -1,1 +1,1 @@
-web: ./gradlew run
+web: ./gradlew run --warning-mode all --stacktrace
