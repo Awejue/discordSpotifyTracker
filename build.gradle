@@ -4,7 +4,7 @@ plugins {
 }
 
 application {
-    mainClassName = "org.example.Main"
+    mainClass.set("org.example.Main")
 }
 
 task stage(dependsOn: ['build', 'clean', 'run'])
