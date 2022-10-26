@@ -7,7 +7,7 @@ application {
     mainClassName = "org.example.Main"
 }
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ['build', 'clean', 'run'])
 build.mustRunAfter clean
 
 group 'org.example'
