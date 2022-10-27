@@ -9,6 +9,7 @@ import se.michaelthelin.spotify.model_objects.specification.Paging;
 import se.michaelthelin.spotify.requests.authorization.client_credentials.ClientCredentialsRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistRequest;
 import se.michaelthelin.spotify.requests.data.artists.GetArtistsAlbumsRequest;
+import se.michaelthelin.spotify.requests.data.search.simplified.SearchArtistsRequest;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,6 +33,12 @@ public class Spotify {
 
     private static List<ArtistTemplate> artists;
 
+    /**
+     * Check if there are new singles/albums by checking the latest 3 of each artist(added to json) from spotify api and compare them with the 3 from json.
+     * Then adds the difference to changes list.
+     * @param serverId id of server method will be used on
+     * @return List of AlbumSimplified object, if there are any new songs, otherwise returns empty list
+     */
     public static List<AlbumSimplified> checkArtists_Async(String serverId) {
         initialize(serverId);
         if (!artists.isEmpty()) {
@@ -73,6 +80,12 @@ public class Spotify {
         } else return new ArrayList<>();
     }
 
+    /**
+     * Add artist by providing his spotify link.
+     * @param serverId id of server method will be used on
+     * @param spotifyLink spotify link to the artist
+     * @return String saying how this operation ended
+     */
     public static String addArtist(String serverId, String spotifyLink) {
         initialize(serverId);
         try {
@@ -116,7 +129,12 @@ public class Spotify {
         }
     }
 
-
+    /**
+     * Get artist object from json
+     * @param serverId id of the server method will be used on
+     * @param id id of the list
+     * @return Spotify Artist object from list of json artists
+     */
     public static Artist getArtistFromJson(String serverId, int id) {
         initialize(serverId);
         setAccessToken();
@@ -127,13 +145,23 @@ public class Spotify {
         else return null;
     }
 
-
+    /**
+     *
+     * @param id spotify id
+     * @return Spotify Artist object with given id
+     */
     public static Artist getArtist(String id) {
         setAccessToken();
         final GetArtistRequest artistRequest = spotifyApi.getArtist(id).build();
         return artistRequest.executeAsync().join();
     }
 
+    /**
+     * Remove artist from json file with provided name/spotify link
+     * @param serverId server id method will be used on
+     * @param name name of an artist or spotify link
+     * @return String saying how operation ended
+     */
     public static String removeArtist(String serverId, String name) {
         initialize(serverId);
         String finalName = getIdFromUrl(name);
@@ -153,6 +181,11 @@ public class Spotify {
         }
     }
 
+    /**
+     * Gets artist's id from given spotify link.
+     * @param spotifyLink Spotify link to artist
+     * @return id of an artist from link or 'Wrong link'
+     */
     private static String getIdFromUrl(String spotifyLink) {
         Pattern pattern = Pattern.compile("https://open\\.spotify\\.com/artist/[a-zA-Z0-9]{22}");
 
@@ -172,19 +205,49 @@ public class Spotify {
         artists = JsonReader.getJSONArtists(serverId);
     }
 
+    /**
+     * Sets access token for spotify api
+     */
     private static void setAccessToken() {
         final CompletableFuture<ClientCredentials> clientCredentialsFuture = clientCredentialsRequest.executeAsync();
         final ClientCredentials clientCredentials = clientCredentialsFuture.join();
         spotifyApi.setAccessToken(clientCredentials.getAccessToken());
     }
 
+    /**
+     * Creates embed builder with all artists.
+     * @param serverId server id method will be used on.
+     * @return Embed builder containing all artist in embed fields
+     */
     public static EmbedBuilder createArtistsEmbed(String serverId) {
         initialize(serverId);
         EmbedBuilder embed = new EmbedBuilder();
         for (ArtistTemplate artist: artists) {
-            embed.addField(artist.getName(), artist.getName(), true);
+            embed.addField(artist.getName(), "\u200b", true);
         }
         return embed;
     }
 
+    /**
+     * Gets number of artists stored in json file.
+     * @param serverId server id method will be used on
+     * @return number of artists stored in json file
+     */
+    public static int getArtistsCount(String serverId) {
+        initialize(serverId);
+        return artists.size();
+    }
+
+    /**
+     * Search artist by name
+     * @param artistsName name of an artist to search for
+     * @param id page
+     * @return Spotify Artist object found by spotify api
+     */
+    public static Artist searchArtist(String artistsName, int id) {
+        setAccessToken();
+        SearchArtistsRequest searchArtistsRequest = spotifyApi.searchArtists(artistsName).limit(1).offset(id).build();
+        System.out.println(searchArtistsRequest.executeAsync().join().getItems()[0].getName());
+        return searchArtistsRequest.executeAsync().join().getItems()[0];
+    }
 }
