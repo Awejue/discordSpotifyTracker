@@ -10,6 +10,9 @@ application {
 group 'org.example'
 version '1.0-SNAPSHOT'
 
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean
+
 repositories {
     mavenCentral()
 }
