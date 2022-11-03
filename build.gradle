@@ -10,7 +10,7 @@ application {
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-task stage(dependsOn: ['build', 'clean'])
+task stage(dependsOn: ['build', 'clean', 'run'])
 build.mustRunAfter clean
 
 repositories {
