@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="aa5e75cf-feba-403e-b943-97ae3ccd904f" name="Changes" comment="Documentation, Search method">
+    <list default="true" id="aa5e75cf-feba-403e-b943-97ae3ccd904f" name="Changes" comment="Documentation for json reader file">
+      <change afterPath="$PROJECT_DIR$/.idea/jpa-buddy.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/ArtistTemplate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/ArtistTemplate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/JsonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/JsonReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Procfile" beforeDir="false" afterPath="$PROJECT_DIR$/Procfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +45,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "last_opened_file_path": "C:/Users/operator/IdeaProjects/smokinightwood",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
@@ -181,7 +185,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666874564220</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Documentation for json reader file">
+      <created>1666875160541</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1666875160541</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -201,7 +212,8 @@
     <MESSAGE value="Add JSONReader.java&#10;Add json file&#10;Add ArtistTemplate.java&#10;JSONObject creating weird error" />
     <MESSAGE value="artist menu to change" />
     <MESSAGE value="Documentation, Search method" />
-    <option name="LAST_COMMIT_MESSAGE" value="Documentation, Search method" />
+    <MESSAGE value="Documentation for json reader file" />
+    <option name="LAST_COMMIT_MESSAGE" value="Documentation for json reader file" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

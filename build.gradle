@@ -7,9 +7,6 @@ application {
     mainClass.set("org.example.Main")
 }
 
-task stage(dependsOn: ['build', 'clean', 'run'])
-build.mustRunAfter clean
-
 group 'org.example'
 version '1.0-SNAPSHOT'
 
@@ -19,7 +16,7 @@ repositories {
 
 dependencies {
     implementation 'org.javacord:javacord:3.6.0'
-    implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.2.1'
+    implementation 'se.michaelthelin.spotify:spotify-web-api-java:7.2.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.4.2'
 }
 

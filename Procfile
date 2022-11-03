@@ -1,1 +1,1 @@
-web: ./gradlew run --warning-mode all --stacktrace
+web: java -jar build/libs/smokinightwood-1.0-SNAPSHOT.jar
